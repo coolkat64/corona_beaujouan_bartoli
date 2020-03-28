@@ -3,8 +3,11 @@ Province/State,Country/Region,Latitude,Longitude
 ,Albania,41.1533,20.1683
 ,Algeria,28.0339,1.6596
 ,Andorra,42.5063,1.5218
+,Antigua and Barbuda,17.0608,-61.7964
 ,Argentina,-38.4161,-63.6167
 ,Armenia,40.0691,45.0382
+,Aruba,12.5211,-69.9683
+Australian Capital Territory,Australia,-35.4735,149.0124
 From Diamond Princess,Australia,35.4437,139.638
 New South Wales,Australia,-33.8688,151.2093
 Northern Territory,Australia,-12.4634,130.8456
@@ -33,11 +36,15 @@ Alberta,Canada,53.9333,-116.5765
 British Columbia,Canada,53.7267,-127.6476
 "Calgary, Alberta",Canada,51.0447,-114.0719
 "Edmonton, Alberta",Canada,53.5461,-113.4938
+Grand Princess,Canada,37.6489,-122.6655
 "London, ON",Canada,42.9849,-81.2453
+Manitoba,Canada,53.7609,-98.8139
 New Brunswick,Canada,46.5653,-66.4619
 Ontario,Canada,51.2538,-85.3232
 Quebec,Canada,52.9399,-73.5491
+Saskatchewan,Canada,52.9399,-106.4509
 "Toronto, ON",Canada,43.6532,-79.3832
+,Cayman Islands,19.3133,-81.2546
 ,Channel Islands,49.3723,-2.3644
 ,Chile,-35.6751,-71.543
 Anhui,China,31.8257,117.2264
@@ -79,7 +86,7 @@ Zhejiang,China,29.1832,120.0934
 ,Cote d'Ivoire,7.54,-5.5471
 ,Croatia,45.1667,15.5
 Diamond Princess,Cruise Ship,35.4437,139.638
-,Cuba,22.0,-80.0
+,Cuba,21.5218,-77.7812
 ,Cyprus,35.1264,33.4299
 ,Czech Republic,49.8175,15.472999999999999
 ,Czechia,49.8175,15.472999999999999
@@ -90,9 +97,11 @@ Faroe Islands,Denmark,61.8926,-6.9118
 ,Ecuador,-1.8312,-78.1834
 ,Egypt,26.0,30.0
 ,Estonia,58.5953,25.0136
+,Ethiopia,9.145,40.4897
 ,Faroe Islands,61.8926,-6.9118
 ,Finland,64.0,26.0
 France,France,46.2276,2.2137
+French Polynesia,France,-17.6797,149.4068
 Saint Barthelemy,France,17.9,-62.8333
 St Martin,France,18.0708,-63.0501
 ,France,47.0,2.0
@@ -101,6 +110,8 @@ St Martin,France,18.0708,-63.0501
 ,Germany,51.0,9.0
 ,Gibraltar,36.1408,-5.3536
 ,Greece,39.0742,21.8243
+,Guadeloupe,16.265,-61.551
+,Guinea,9.9456,-9.6966
 ,Guyana,5.0,-58.75
 ,Holy See,41.9029,12.4534
 ,Honduras,15.2,-86.2419
@@ -119,6 +130,8 @@ Hong Kong,Hong Kong SAR,22.3,114.2
 ,Jamaica,18.1096,-77.2975
 ,Japan,36.0,138.0
 ,Jordan,31.24,36.51
+,Kazakhstan,48.0196,66.9237
+,Kenya,-0.0236,37.9062
 ,"Korea, South",36.0,128.0
 ,Kuwait,29.5,47.75
 ,Latvia,56.8796,24.6032
@@ -206,6 +219,7 @@ Diamond Princess cruise ship,Others,35.4437,139.638
 ,Spain,40.0,-4.0
 ,Sri Lanka,7.8731,80.7718
 ,St. Martin,18.0708,-63.0501
+,Sudan,12.8628,30.2176
 ,Sweden,63.0,16.0
 ,Switzerland,46.8182,8.2275
 Taiwan,Taipei and environs,23.7,121.0
@@ -217,6 +231,7 @@ Taiwan,Taiwan,23.7,121.0
 ,Turkey,38.9637,35.2433
 ,UK,55.0,-3.0
 " Norfolk County, MA",US,42.1767,-71.1449
+Alabama,US,32.3182,-86.9023
 "Alameda County, CA",US,37.6017,-121.7195
 Alaska,US,61.3707,-152.4044
 Arizona,US,33.7298,-111.4312
@@ -405,6 +420,7 @@ Wyoming,US,42.756,-107.3025
 Channel Islands,United Kingdom,49.3723,-2.3644
 Gibraltar,United Kingdom,36.1408,-5.3536
 UK,United Kingdom,55.3781,-3.4360000000000004
+United Kingdom,United Kingdom,55.3781,-3.4360000000000004
 ,Vatican City,41.9029,12.4534
 ,Viet Nam,16.0,108.0
 ,Vietnam,16.0,108.0
