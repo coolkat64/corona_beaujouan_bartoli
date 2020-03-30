@@ -117,7 +117,7 @@ app.layout = html.Div([
         dcc.Tab(label='Model', children=[  
             html.Div([
                 html.H4(['Beta (mean recovery rate/day)'], style={'textAlign': 'left'}),
-                dcc.Input(id="beta", type="number", placeholder="Beta", value=0.2, step=0.01, max=1)
+                dcc.Input(id="beta", type="number", placeholder="Beta", value=0.3, step=0.01, max=1)
             ]),
             html.Div([
                 html.H4(['Gamma'], style={'textAlign': 'left'}),
@@ -131,9 +131,9 @@ app.layout = html.Div([
                 dcc.RadioItems(
                     id='variable2',
                     options=[
-                        {'label': 'Confirmed', 'value': 'Confirmed'},
-                        {'label': 'Deaths', 'value': 'Deaths'},
-                        {'label': 'Recovered', 'value': 'Recovered'}
+                        {'label': 'Infected', 'value': 'Infected'},
+                        {'label': 'Recovered', 'value': 'Recovered'},
+                        {'label': 'Susceptible', 'value': 'Susceptible'}
                     ],
                     value='Confirmed',
                     labelStyle={'display': 'inline-block'}
@@ -239,53 +239,58 @@ def update_map(map_day):
         Input('beta', 'value'),
         Input('gamma', 'value'), 
         Input('N', 'value'),
-        Input('country3', 'value'),   
+        Input('country3', 'value'), 
+        Input('variable2', 'value')  
     ]
 )
-def update_model(beta, gamma, country3, N):
+def update_model(beta, gamma, N, country3, variable2):
 
-    df = epidemie_df.get_country(country3).sort_values(by='day', ascending=False)
+    if country3 != None:
+        df = epidemie_df.get_country(country3).sort_values(by='day', ascending=False)
+    else:
+        df = epidemie_df.groupby(['Country/Region', 'day']).agg({'Confirmed': 'sum', 'Deaths': 'sum', 'Recovered': 'sum'}).reset_index().sort_values(by='day', ascending=False)
 
     '''Here include predictions'''
     sim = pd.DataFrame(None, columns = ['day', 'susceptible' ,'infected', 'recovered'])
     I = df.Confirmed.loc[1]
     S = N - df.Deaths.loc[1] - df.Recovered.loc[1]
     R = df.Recovered.loc[1]
-    day0 = df.day.iloc[1]
+    day0 = df.day.loc[1]
 
     # ([-beta*S*I, beta*S*I-gamma*I, gamma*I])
 
     temp = np.array([day0, S, I, R]).reshape(4)
     sim.loc[0] = temp
 
-    for i in range(30):
+    for i in range(100):
         temp = [sim.day.loc[i] + datetime.timedelta(days=1)] + SIR(beta, gamma, sim.loc[i])
         sim.loc[i+1] = temp
 
     return {
-        'data': [
+        'data': ([
             dict(
                 x=sim['day'],
                 y=sim['infected'],
                 type='line',
                 name='Infected'
             )
-        ] + ([
+        ] if variable2 == 'Infected' else []) + ([
             dict(
                 x=sim['day'],
                 y=sim['recovered'],
                 type='line',
                 name='Deaths'
             )            
-        ])
-        + [
+        ] if variable2 == 'Recovered' else [])
+        + ([
             dict(
                 x=sim['day'],
                 y=sim['susceptible'],
                 type='line',
                 name='Recovered'
             )
-        ]
+        ] if variable2 == 'Susceptible' else [])
+        
     }
 
 if __name__ == '__main__':
