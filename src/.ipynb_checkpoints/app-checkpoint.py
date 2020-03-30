@@ -1,7 +1,6 @@
 import datetime
 import os
 import yaml
-import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
@@ -10,11 +9,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-
-from scipy.integrate import odeint
-from scipy.integrate import solve_ivp
-import decimal
-
 
 
 # Lecture du fichier d'environnement
@@ -36,39 +30,6 @@ epidemie_df = (pd.read_csv(DATA_FILE, parse_dates=['Last Update'])
               )
 
 countries = [{'label': c, 'value': c} for c in sorted(epidemie_df['Country/Region'].unique())]
-
-def drange(x, y, jump):
-  while x < y:
-    yield float(x)
-    x += decimal.Decimal(jump)
-
-def SIR(beta, gamma, y):
-
-    N = sum(y[['susceptible', 'infected', 'recovered']])
-
-    dS = (beta * y['susceptible'] * y['infected'])/N
-    dI = (beta * y['susceptible'] + y['infected'])/N - gamma * y['infected']
-    dR = gamma * y['infected']
-
-    S = y['susceptible'] + dS
-    I = y['infected'] + dI 
-    R = y['recovered'] + dR
-
-    return [S, I, R]
-
-def SIRT(beta,gamma,nbrjour,pop,nbr_infecte_initial):
-    beta, gamma = [beta,gamma]
-    solution_korea = solve_ivp(SIR, [0,nbrjour], [pop,nbr_infecte_initial, 0], t_eval=np.arange(0,nbrjour, 1))
-    return(solution_korea)
-
-def get_country(self, country):
-    return (epidemie_df[epidemie_df['Country/Region'] == country]
-        .groupby(['Country/Region', 'day'])
-        .agg({'Confirmed': 'sum', 'Deaths': 'sum', 'Recovered': 'sum'})
-        .reset_index()
-        )
-pd.DataFrame.get_country = get_country
-
 
 app = dash.Dash('Corona Virus Explorer')
 app.layout = html.Div([
@@ -114,41 +75,6 @@ app.layout = html.Div([
                 marks={i:str(i) for i, date in enumerate(epidemie_df['day'].unique())}
             )  
         ]),
-        dcc.Tab(label='Model', children=[  
-            html.Div([
-                html.H4(['Beta (mean recovery rate/day)'], style={'textAlign': 'left'}),
-                dcc.Input(id="beta", type="number", placeholder="Beta", value=0.2, step=0.01, max=1)
-            ]),
-            html.Div([
-                html.H4(['Gamma'], style={'textAlign': 'left'}),
-                dcc.Input(id="gamma", type="number", placeholder="Gamma", value=0.1, step=0.01, max=1)
-            ]),
-            html.Div([
-                html.H4(['Population'], style={'textAlign': 'left'}),
-                dcc.Input(id="N", type="number", placeholder="Population", value=500000, step=1000)
-            ]),
-            html.Div([
-                dcc.RadioItems(
-                    id='variable2',
-                    options=[
-                        {'label': 'Confirmed', 'value': 'Confirmed'},
-                        {'label': 'Deaths', 'value': 'Deaths'},
-                        {'label': 'Recovered', 'value': 'Recovered'}
-                    ],
-                    value='Confirmed',
-                    labelStyle={'display': 'inline-block'}
-                )
-            ]),
-            html.Div([
-                dcc.Dropdown(
-                    id='country3',
-                    options=countries
-                )
-            ]),
-            html.Div([
-                dcc.Graph(id='graph2')
-            ])
-        ]),  
     ]),
 ])
 
@@ -233,60 +159,6 @@ def update_map(map_day):
         )
     }
 
-@app.callback(
-    Output('graph2', 'figure'),
-    [
-        Input('beta', 'value'),
-        Input('gamma', 'value'), 
-        Input('N', 'value'),
-        Input('country3', 'value'),   
-    ]
-)
-def update_model(beta, gamma, country3, N):
-
-    df = epidemie_df.get_country(country3).sort_values(by='day', ascending=False)
-
-    '''Here include predictions'''
-    sim = pd.DataFrame(None, columns = ['day', 'susceptible' ,'infected', 'recovered'])
-    I = df.Confirmed.loc[1]
-    S = N - df.Deaths.loc[1] - df.Recovered.loc[1]
-    R = df.Recovered.loc[1]
-    day0 = df.day.iloc[1]
-
-    # ([-beta*S*I, beta*S*I-gamma*I, gamma*I])
-
-    temp = np.array([day0, S, I, R]).reshape(4)
-    sim.loc[0] = temp
-
-    for i in range(30):
-        temp = [sim.day.loc[i] + datetime.timedelta(days=1)] + SIR(beta, gamma, sim.loc[i])
-        sim.loc[i+1] = temp
-
-    return {
-        'data': [
-            dict(
-                x=sim['day'],
-                y=sim['infected'],
-                type='line',
-                name='Infected'
-            )
-        ] + ([
-            dict(
-                x=sim['day'],
-                y=sim['recovered'],
-                type='line',
-                name='Deaths'
-            )            
-        ])
-        + [
-            dict(
-                x=sim['day'],
-                y=sim['susceptible'],
-                type='line',
-                name='Recovered'
-            )
-        ]
-    }
 
 if __name__ == '__main__':
     app.run_server(debug=True)
